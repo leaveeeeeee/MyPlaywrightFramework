@@ -2,7 +2,7 @@
 <module type="PYTHON_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$" />
-    <orderEntry type="jdk" jdkName="Python 3.13 virtualenv at /Volumes/SD Card/从入门到 recode/解释器" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.12 (ZZZSoundTrigger-main)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PackageRequirementsSettings">
