@@ -1,7 +1,5 @@
 import pytest
 import logging
-import conftest
-
 
 
 class TestUI:
