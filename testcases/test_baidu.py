@@ -1,5 +1,5 @@
 import pytest
-import logging
+from helpers.helper_functions import *
 
 
 class TestUI:
@@ -11,7 +11,8 @@ class TestUI:
             page = context.new_page()
             # 访问百度首页
             page.goto("http://www.baidu.com")
-            logging.info("成功访问 http://www.baidu.com.")
+            loginfo("成功访问 http://www.baidu.com.")
+            wait(2, "等待页面加载")
         except Exception as e:
             logging.error(f"访问百度时出错: {e}")
         finally:
@@ -25,7 +26,7 @@ class TestUI:
             # 创建新页面
             page = context.new_page()
             # 访问淘宝首页
-            page.goto("http://www.taobao.com")
+            page.goto("https://www.taobao.com")
             # 截图并保存到指定路径
             screenshot_path = "./taobao.png"
             page.screenshot(path=screenshot_path)
@@ -36,6 +37,7 @@ class TestUI:
             # 关闭浏览器上下文
             context.close()
 
-
+aw_test = TestUI
 if __name__ == '__main__':
-    pytest.main(["-v", "-s", __file__])
+    # pytest.main(["-v", "-s", __file__])
+    aw_test.baidu()
