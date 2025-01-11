@@ -39,5 +39,4 @@ class TestUI:
 
 aw_test = TestUI
 if __name__ == '__main__':
-    # pytest.main(["-v", "-s", __file__])
-    aw_test.baidu()
+    pytest.main(["-v", "-s", __file__])

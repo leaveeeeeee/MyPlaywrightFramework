@@ -7,5 +7,8 @@ def wait(seconds, reason=""):
     return time.sleep(seconds)
 
 
-def loginfo(messege=""):
-    logging.info({messege})
+def loginfo(message=""):
+    logging.info({message})
+
+def logdebug(message=""):
+    logging.debug({message})

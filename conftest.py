@@ -8,8 +8,6 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %
 logger = logging.getLogger(__name__)
 
 
-
-
 @pytest.fixture(scope="module")
 def playwright_instance():
     # 启动 Playwright 实例
