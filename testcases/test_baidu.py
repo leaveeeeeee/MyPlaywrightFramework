@@ -1,41 +1,46 @@
-import pytest
+from conftest import test_context
 from helpers.helper_functions import *
+import pytest
+import allure
 
 
 class TestUI:
-    def test_baidu(self, browser):
+    @allure.title("打开百度搜索")
+    def test_baidu(self, browser, test_context):
         try:
-            # 创建新的浏览器上下文
-            context = browser.new_context()
-            # 创建新页面
-            page = context.new_page()
-            # 访问百度首页
-            page.goto("http://www.baidu.com")
-            loginfo("成功访问 http://www.baidu.com.")
-            wait(2, "等待页面加载")
+            with Step("创建浏览器上下文"):
+                context = browser.new_context(viewport={"width": 1920, "height": 1080})
+            with Step("创建新页面"):
+                page = context.new_page()
+            with Step("访问百度首页"):
+                page.goto("http://www.baidu.com")
+                loginfo("成功访问 http://www.baidu.com.")
+                take_screenshot(page, test_context["screenshot_path"], " baidu_homepage")
+
         except Exception as e:
             logging.error(f"访问百度时出错: {e}")
         finally:
-            # 关闭浏览器上下文
-            context.close()
+            with Step("关闭浏览器上下文"):
+                context.close()
 
-    def test_taobao(self, webkit_browser):
+    @allure.title("打开淘宝")
+    def test_taobao(self, browser, test_context):
         try:
-            # 创建新的浏览器上下文，并设置视口大小
-            context = webkit_browser.new_context(viewport={"width": 1280, "height": 720})
-            # 创建新页面
-            page = context.new_page()
-            # 访问淘宝首页
-            page.goto("https://www.taobao.com")
-            # 截图并保存到指定路径
-            screenshot_path = "./taobao.png"
-            page.screenshot(path=screenshot_path)
-            logging.info(f"截图已保存至 {screenshot_path}")
+            with Step("创建浏览器上下文"):
+                context = browser.new_context(viewport={"width": 1280, "height": 720})
+            with Step("创建新页面"):
+                page = context.new_page()
+            with Step("访问淘宝首页"):
+                page.goto("https://www.taobao.com")
+                loginfo("成功访问 https://www.taobao.com.")
+                take_screenshot(page, test_context["screenshot_path"], "taobao_homepage")
+
         except Exception as e:
             logging.error(f"访问淘宝时出错: {e}")
         finally:
-            # 关闭浏览器上下文
-            context.close()
+            with Step("关闭浏览器上下文"):
+                context.close()
+
 
 aw_test = TestUI
 if __name__ == '__main__':
