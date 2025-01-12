@@ -23,22 +23,22 @@ def wait(seconds, reason=""):
 
 
 def loginfo(message=""):
-    logging.info({message})
-
+    logging.info(message)
 
 def logdebug(message=""):
-    logging.debug({message})
-
+    logging.debug(message)
 
 def logerror(message=""):
-    logging.error({message})
+    logging.error(message)
+
 
 
 def take_screenshot(page, screenshot_path, step_name):
     screenshot_name = os.path.join(screenshot_path, f"{step_name}.png")
     page.screenshot(path=screenshot_name)
     loginfo(f"截图已保存至 {screenshot_name}")
-    allure.attach.file(screenshot_name, name=f"Screenshot of {step_name}", attachment_type=allure.attachment_type.PNG)
+    allure.attach.file(screenshot_name, name=f"Screenshot of {step_name}",
+                       attachment_type=allure.attachment_type.PNG)
 
 
 class Step:
@@ -47,11 +47,12 @@ class Step:
         self.page = page
         self.screenshot_path = screenshot_path
         self.start_time = None
+        self.allure_step = None
 
     def __enter__(self):
         self.start_time = datetime.now()
         loginfo(f"开始步骤 {self.step_name}")
-        allure.step(self.step_name).__enter__()
+        self.allure_step = allure.step(self.step_name).__enter__()
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
@@ -73,4 +74,5 @@ class Step:
             allure.attach.file(screenshot_name, name=f"Screenshot of {self.step_name}",
                                attachment_type=allure.attachment_type.PNG)
 
-        allure.step(self.step_name).__exit__(exc_type, exc_value, traceback)
+        if self.allure_step:
+            self.allure_step.__exit__(exc_type, exc_value, traceback)

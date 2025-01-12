@@ -2,7 +2,7 @@ from conftest import test_context
 from helpers.helper_functions import *
 import pytest
 import allure
-
+import traceback
 
 class TestUI:
     @allure.title("打开百度搜索")
@@ -18,10 +18,11 @@ class TestUI:
                 take_screenshot(page, test_context["screenshot_path"], " baidu_homepage")
 
         except Exception as e:
-            logging.error(f"访问百度时出错: {e}")
+            logerror(f"访问百度时出错: {e}\n{traceback.format_exc()}")
         finally:
             with Step("关闭浏览器上下文"):
-                context.close()
+                if 'context' in locals():
+                    context.close()
 
     @allure.title("打开淘宝")
     def test_taobao(self, browser, test_context):
@@ -36,10 +37,11 @@ class TestUI:
                 take_screenshot(page, test_context["screenshot_path"], "taobao_homepage")
 
         except Exception as e:
-            logging.error(f"访问淘宝时出错: {e}")
+            logerror(f"访问淘宝时出错: {e}")
         finally:
             with Step("关闭浏览器上下文"):
-                context.close()
+                if 'context' in locals():
+                    context.close()
 
 
 aw_test = TestUI
