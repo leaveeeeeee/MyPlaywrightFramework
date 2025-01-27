@@ -25,12 +25,13 @@ def wait(seconds, reason=""):
 def loginfo(message=""):
     logging.info(message)
 
+
 def logdebug(message=""):
     logging.debug(message)
 
+
 def logerror(message=""):
     logging.error(message)
-
 
 
 def take_screenshot(page, screenshot_path, step_name):

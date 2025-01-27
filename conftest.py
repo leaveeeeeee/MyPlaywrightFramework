@@ -1,14 +1,28 @@
 import pytest
-import os
+import sys
 from playwright.sync_api import sync_playwright
-from helpers import helper_functions
+from helpers.helper_functions import *
+from helpers import check_playwright_version
+
+# 添加当前目录到系统路径，以便导入 check_playwright_version
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+# 导入版本检查函数
+from helpers.check_playwright_version import main as check_playwright_version
+
+
+def pytest_sessionstart(session):
+    loginfo("开始测试前检查 Playwright 版本...")
+    check_playwright_version()
+    loginfo("Playwright 版本检查完成。")
+
 
 # 日志目录
 LOG_DIR = os.path.join(os.path.dirname(__file__), 'logs')
 os.makedirs(LOG_DIR, exist_ok=True)
 
 # 截图目录
-SCREENSHOT_DIR = os.path.join(os.path.dirname(__file__), 'screenshots')
+SCREENSHOT_DIR = os.path.join(os.path.dirname(__file__), './report/screenshots')
 os.makedirs(SCREENSHOT_DIR, exist_ok=True)
 
 
@@ -19,19 +33,19 @@ def pytest_runtest_makereport(item, call):
     if report.when == "call":
         if report.failed:
             log_file_path = os.path.join(LOG_DIR, f"{item.name}_error.log")
-            helper_functions.setup_logging(log_file_path)
-            helper_functions.logerror(f"测试 {item.name} 失败: {report.longreprtext}")
+            setup_logging(log_file_path)
+            logerror(f"测试 {item.name} 失败: {report.longreprtext}")
         else:
             log_file_path = os.path.join(LOG_DIR, f"{item.name}.log")
-            helper_functions.setup_logging(log_file_path)
-            helper_functions.loginfo(f"测试 {item.name} 成功")
+            setup_logging(log_file_path)
+            loginfo(f"测试 {item.name} 成功")
 
 
 @pytest.fixture(scope="function")
 def test_context(request):
     test_name = request.node.name
     log_file_path = os.path.join(LOG_DIR, f"{test_name}.log")
-    helper_functions.setup_logging(log_file_path)
+    setup_logging(log_file_path)
     screenshot_path = os.path.join(SCREENSHOT_DIR, test_name)
     os.makedirs(screenshot_path, exist_ok=True)
     return {
