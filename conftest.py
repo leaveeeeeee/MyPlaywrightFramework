@@ -1,3 +1,4 @@
+import subprocess
 import pytest
 import sys
 from playwright.sync_api import sync_playwright
@@ -12,20 +13,21 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 # 日志目录
-LOG_DIR = os.path.join(os.path.dirname(__file__), './report/logs')
+LOG_DIR = os.path.join(PROJECT_ROOT, './report/logs')
 os.makedirs(LOG_DIR, exist_ok=True)
 
 # 截图目录
-SCREENSHOT_DIR = os.path.join(os.path.dirname(__file__), './report/screenshots')
+SCREENSHOT_DIR = os.path.join(PROJECT_ROOT, './report/screenshots')
 os.makedirs(SCREENSHOT_DIR, exist_ok=True)
 
 # Allure 结果目录
-ALLURE_RESULTS_DIR = os.path.join(os.path.dirname(__file__), './report/allure-results')
+ALLURE_RESULTS_DIR = os.path.join(PROJECT_ROOT, './report/allure-results')
 os.makedirs(ALLURE_RESULTS_DIR, exist_ok=True)
+
 
 def pytest_sessionstart(session):
     """
-    版本检查函数，全局日志配置
+    版本检查函数
     """
     loginfo("开始测试前检查 Playwright 版本...")
     check_playwright_version()
@@ -91,9 +93,20 @@ def webkit_browser(playwright_instance):
     # 关闭浏览器
     browser.close()
 
+
 def pytest_configure(config):
     """
     动态设置 -alluredir 参数
     """
     if not config.getoption("--alluredir"):
         config.option.alluredir = ALLURE_RESULTS_DIR
+
+
+def pytest_sessionfinish(session, exitstatus):
+    """
+    测试会话结束后的操作
+    """
+
+    report_dir = os.path.join(PROJECT_ROOT, './report/allure-report')
+    results_dir = os.path.join(PROJECT_ROOT, './report/allure-results')
+    subprocess.run(['allure', 'generate', results_dir, '-o', report_dir, '--clean'])
