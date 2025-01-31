@@ -7,14 +7,24 @@ from datetime import datetime
 
 # 日志记录
 def setup_logging(log_file_path):
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s',
-        handlers=[
-            logging.FileHandler(log_file_path),
-            logging.StreamHandler()
-        ]
-    )
+    log_dir = os.path.dirname(log_file_path)
+    os.makedirs(log_dir, exist_ok=True)
+    if not logging.getLogger().handlers:
+        logging.basicConfig(
+            level=logging.INFO,
+            format='%(asctime)s - %(levelname)s - %(message)s',
+            handlers=[
+                logging.FileHandler(log_file_path),
+                logging.StreamHandler()
+            ]
+        )
+    else:
+        # 如果已经有处理器，确保添加新的处理器
+        logger = logging.getLogger()
+        file_handler = logging.FileHandler(log_file_path)
+        stream_handler = logging.StreamHandler()
+        logger.addHandler(file_handler)
+        logger.addHandler(stream_handler)
 
 
 def wait(seconds, reason=""):
